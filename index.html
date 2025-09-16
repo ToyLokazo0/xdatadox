@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="theme-color" content="#bb86fc"/>
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Clientes XD">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+
     <title>CLIENTES XDATA DOX</title>
     <style>
         /* --- ESTILOS (CSS) --- */
@@ -96,21 +105,19 @@
             line-height: 30px;
             text-align: center;
         }
-        /* --- AJUSTES AL BOTÓN DE COPIAR Y SU CONTENEDOR --- */
         .id-container {
-            display: flex; /* Activa el modo flexible */
-            justify-content: space-between; /* Empuja los elementos a los extremos */
-            align-items: center; /* Los alinea verticalmente */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .btn-copiar {
             background-color: #333;
             color: #e0e0e0;
             border: 1px solid #555;
             border-radius: 4px;
-            padding: 3px 8px; /* Un poco más pequeño */
+            padding: 3px 8px;
             font-size: 12px;
             cursor: pointer;
-            /* Ya no necesitamos margen ni alineación vertical aquí */
         }
         .btn-copiar:hover {
             background-color: #555;
@@ -140,147 +147,158 @@
         <div>
             <h2>Lista de Clientes</h2>
             <div id="lista-clientes">
-                </div>
+            </div>
         </div>
     </div>
 
     <script>
-    // Referencias a los elementos del HTML
-    const form = document.getElementById('form-agregar-cliente');
-    const inputNombre = document.getElementById('nombre-cliente');
-    const inputTelegram = document.getElementById('id-telegram');
-    const inputDuracion = document.getElementById('duracion-dias');
-    const listaClientesDiv = document.getElementById('lista-clientes');
+        // Referencias a los elementos del HTML
+        const form = document.getElementById('form-agregar-cliente');
+        const inputNombre = document.getElementById('nombre-cliente');
+        const inputTelegram = document.getElementById('id-telegram');
+        const inputDuracion = document.getElementById('duracion-dias');
+        const listaClientesDiv = document.getElementById('lista-clientes');
 
-    function cargarClientes() {
-        const clientesJSON = localStorage.getItem('clientes');
-        return clientesJSON ? JSON.parse(clientesJSON) : [];
-    }
-
-    function guardarClientes(clientes) {
-        localStorage.setItem('clientes', JSON.stringify(clientes));
-    }
-    
-    function renderizarClientes() {
-        const clientes = cargarClientes();
-        const ahora = new Date();
-        listaClientesDiv.innerHTML = ''; 
-
-        clientes.sort((a, b) => {
-            const tiempoRestanteA = new Date(a.fecha_fin) - ahora;
-            const tiempoRestanteB = new Date(b.fecha_fin) - ahora;
-            return tiempoRestanteA - tiempoRestanteB;
-        });
-
-        if (clientes.length === 0) {
-            listaClientesDiv.innerHTML = '<p class="no-clientes">No hay clientes registrados.</p>';
-            return;
+        function cargarClientes() {
+            const clientesJSON = localStorage.getItem('clientes');
+            return clientesJSON ? JSON.parse(clientesJSON) : [];
         }
 
-        clientes.forEach((cliente, index) => {
-            const fechaFin = new Date(cliente.fecha_fin);
-            const tiempoRestanteMs = fechaFin - ahora;
-
-            let tiempoHTML = '';
-            if (tiempoRestanteMs > 0) {
-                const dias = Math.floor(tiempoRestanteMs / (1000 * 60 * 60 * 24));
-                const horas = Math.floor((tiempoRestanteMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutos = Math.floor((tiempoRestanteMs % (1000 * 60 * 60)) / (1000 * 60));
-                const segundos = Math.floor((tiempoRestanteMs % (1000 * 60)) / 1000);
-                tiempoHTML = `<p class="tiempo-restante">${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
-            } else {
-                tiempoHTML = `<p class="tiempo-restante tiempo-expirado">Membresía Expirada</p>`;
-            }
-
-            const clienteCard = document.createElement('div');
-            clienteCard.className = 'cliente-card';
-            // --- AQUÍ APLICAMOS LA NUEVA CLASE AL PÁRRAFO ---
-            clienteCard.innerHTML = `
-                <button class="btn-eliminar" onclick="eliminarCliente(${index})">X</button>
-                <p><strong>Nombre:</strong> ${cliente.nombre}</p>
-                <p class="id-container">
-                   <span><strong>ID Telegram:</strong> ${cliente.id_telegram}</span>
-                   <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">Copiar</button>
-                </p>
-                <p><strong>Termina el:</strong> ${fechaFin.toLocaleString('es-ES')}</p>
-                ${tiempoHTML}
-            `;
-            listaClientesDiv.appendChild(clienteCard);
-        });
-    }
-
-    function agregarCliente(event) {
-        event.preventDefault();
-        const nombre = inputNombre.value.trim();
-        const idTelegram = inputTelegram.value.trim();
-        const duracionDias = parseInt(inputDuracion.value, 10);
+        function guardarClientes(clientes) {
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+        }
         
-        if (nombre && idTelegram && !isNaN(duracionDias) && duracionDias > 0) {
-            const clientes = cargarClientes();
-            const fechaInicio = new Date();
-            const fechaFin = new Date();
-            fechaFin.setDate(fechaInicio.getDate() + duracionDias);
-
-            const nuevoCliente = {
-                nombre: nombre,
-                id_telegram: idTelegram,
-                fecha_inicio: fechaInicio.toISOString(),
-                fecha_fin: fechaFin.toISOString()
-            };
-
-            clientes.push(nuevoCliente);
-            guardarClientes(clientes);
-            
-            inputNombre.value = '';
-            inputTelegram.value = '';
-            inputDuracion.value = '';
-            renderizarClientes();
-        } else {
-            alert('Por favor, completa todos los campos correctamente.');
-        }
-    }
-
-    function eliminarCliente(originalIndex) {
-         if (confirm('¿Estás seguro de que quieres eliminar a este cliente?')) {
+        function renderizarClientes() {
             const clientes = cargarClientes();
             const ahora = new Date();
-            
-            clientes.sort((a, b) => (new Date(a.fecha_fin) - ahora) - (new Date(b.fecha_fin) - ahora));
-            
-            const clienteAEliminar = clientes[originalIndex];
-            
-            const clientesOriginales = cargarClientes();
-            const indiceEnOriginal = clientesOriginales.findIndex(c => c.id_telegram === clienteAEliminar.id_telegram && c.fecha_fin === clienteAEliminar.fecha_fin);
+            listaClientesDiv.innerHTML = ''; 
 
-            if (indiceEnOriginal !== -1) {
-                clientesOriginales.splice(indiceEnOriginal, 1);
-                guardarClientes(clientesOriginales);
+            clientes.sort((a, b) => {
+                const tiempoRestanteA = new Date(a.fecha_fin) - ahora;
+                const tiempoRestanteB = new Date(b.fecha_fin) - ahora;
+                return tiempoRestanteA - tiempoRestanteB;
+            });
+
+            if (clientes.length === 0) {
+                listaClientesDiv.innerHTML = '<p class="no-clientes">No hay clientes registrados.</p>';
+                return;
             }
-            
-            renderizarClientes();
+
+            clientes.forEach((cliente, index) => {
+                const fechaFin = new Date(cliente.fecha_fin);
+                const tiempoRestanteMs = fechaFin - ahora;
+
+                let tiempoHTML = '';
+                if (tiempoRestanteMs > 0) {
+                    const dias = Math.floor(tiempoRestanteMs / (1000 * 60 * 60 * 24));
+                    const horas = Math.floor((tiempoRestanteMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutos = Math.floor((tiempoRestanteMs % (1000 * 60 * 60)) / (1000 * 60));
+                    const segundos = Math.floor((tiempoRestanteMs % (1000 * 60)) / 1000);
+                    tiempoHTML = `<p class="tiempo-restante">${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
+                } else {
+                    tiempoHTML = `<p class="tiempo-restante tiempo-expirado">Membresía Expirada</p>`;
+                }
+
+                const clienteCard = document.createElement('div');
+                clienteCard.className = 'cliente-card';
+                clienteCard.innerHTML = `
+                    <button class="btn-eliminar" onclick="eliminarCliente(${index})">X</button>
+                    <p><strong>Nombre:</strong> ${cliente.nombre}</p>
+                    <p class="id-container">
+                       <span><strong>ID Telegram:</strong> ${cliente.id_telegram}</span>
+                       <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">Copiar</button>
+                    </p>
+                    <p><strong>Termina el:</strong> ${fechaFin.toLocaleString('es-ES')}</p>
+                    ${tiempoHTML}
+                `;
+                listaClientesDiv.appendChild(clienteCard);
+            });
         }
-    }
 
-    function copiarID(id, boton) {
-        navigator.clipboard.writeText(id).then(() => {
-            const textoOriginal = boton.innerText;
-            boton.innerText = '¡Copiado!';
-            boton.style.backgroundColor = '#28a745';
-            setTimeout(() => {
-                boton.innerText = textoOriginal;
-                boton.style.backgroundColor = '';
-            }, 2000);
-        }).catch(err => {
-            console.error('Error al copiar el ID: ', err);
-            alert('No se pudo copiar el ID.');
-        });
-    }
-    
-    // --- INICIO DE LA APLICACIÓN ---
-    form.addEventListener('submit', agregarCliente);
-    setInterval(renderizarClientes, 1000);
-    document.addEventListener('DOMContentLoaded', renderizarClientes);
+        function agregarCliente(event) {
+            event.preventDefault();
+            const nombre = inputNombre.value.trim();
+            const idTelegram = inputTelegram.value.trim();
+            const duracionDias = parseInt(inputDuracion.value, 10);
+            
+            if (nombre && idTelegram && !isNaN(duracionDias) && duracionDias > 0) {
+                const clientes = cargarClientes();
+                const fechaInicio = new Date();
+                const fechaFin = new Date();
+                fechaFin.setDate(fechaInicio.getDate() + duracionDias);
 
+                const nuevoCliente = {
+                    nombre: nombre,
+                    id_telegram: idTelegram,
+                    fecha_inicio: fechaInicio.toISOString(),
+                    fecha_fin: fechaFin.toISOString()
+                };
+
+                clientes.push(nuevoCliente);
+                guardarClientes(clientes);
+                
+                inputNombre.value = '';
+                inputTelegram.value = '';
+                inputDuracion.value = '';
+                renderizarClientes();
+            } else {
+                alert('Por favor, completa todos los campos correctamente.');
+            }
+        }
+
+        function eliminarCliente(originalIndex) {
+             if (confirm('¿Estás seguro de que quieres eliminar a este cliente?')) {
+                const clientes = cargarClientes();
+                const ahora = new Date();
+                
+                clientes.sort((a, b) => (new Date(a.fecha_fin) - ahora) - (new Date(b.fecha_fin) - ahora));
+                
+                const clienteAEliminar = clientes[originalIndex];
+                
+                const clientesOriginales = cargarClientes();
+                const indiceEnOriginal = clientesOriginales.findIndex(c => c.id_telegram === clienteAEliminar.id_telegram && c.fecha_fin === clienteAEliminar.fecha_fin);
+
+                if (indiceEnOriginal !== -1) {
+                    clientesOriginales.splice(indiceEnOriginal, 1);
+                    guardarClientes(clientesOriginales);
+                }
+                
+                renderizarClientes();
+            }
+        }
+
+        function copiarID(id, boton) {
+            navigator.clipboard.writeText(id).then(() => {
+                const textoOriginal = boton.innerText;
+                boton.innerText = '¡Copiado!';
+                boton.style.backgroundColor = '#28a745';
+                setTimeout(() => {
+                    boton.innerText = textoOriginal;
+                    boton.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar el ID: ', err);
+                alert('No se pudo copiar el ID.');
+            });
+        }
+        
+        // --- INICIO DE LA APLICACIÓN ---
+        form.addEventListener('submit', agregarCliente);
+        setInterval(renderizarClientes, 1000);
+        document.addEventListener('DOMContentLoaded', renderizarClientes);
+
+        // --- CÓDIGO PARA REGISTRAR EL SERVICE WORKER (CORREGIDO) ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registrado con éxito:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Error al registrar el Service Worker:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
