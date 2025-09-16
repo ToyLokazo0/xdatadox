@@ -89,8 +89,6 @@
         .tiempo-expirado {
             color: #dc3545; /* Rojo */
         }
-
-        /* --- ESTILO DEL BOTÓN DE ELIMINAR (MEJORADO) --- */
         .btn-eliminar {
             position: absolute;
             top: 10px;
@@ -104,18 +102,15 @@
             font-weight: bold;
             cursor: pointer;
             font-size: 20px;
-            /* Usamos Flexbox para centrar perfectamente el contenido */
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Añadimos una transición suave */
             transition: background-color 0.2s, transform 0.2s;
         }
         .btn-eliminar:hover {
-            background-color: #e68e9c; /* Un color un poco más claro al pasar el mouse */
-            transform: scale(1.1); /* Efecto de crecimiento sutil */
+            background-color: #e68e9c;
+            transform: scale(1.1);
         }
-        
         .id-container {
             display: flex;
             justify-content: space-between;
@@ -196,6 +191,7 @@
             }
 
             clientes.forEach((cliente, index) => {
+                const fechaInicio = new Date(cliente.fecha_inicio); // Obtenemos la fecha de inicio
                 const fechaFin = new Date(cliente.fecha_fin);
                 const tiempoRestanteMs = fechaFin - ahora;
 
@@ -212,6 +208,7 @@
 
                 const clienteCard = document.createElement('div');
                 clienteCard.className = 'cliente-card';
+                // --- AQUÍ AGREGAMOS LA NUEVA LÍNEA PARA LA FECHA DE INICIO ---
                 clienteCard.innerHTML = `
                     <button class="btn-eliminar" onclick="eliminarCliente(${index})">&times;</button>
                     <p><strong>Nombre:</strong> ${cliente.nombre}</p>
@@ -219,7 +216,8 @@
                        <span><strong>ID Telegram:</strong> ${cliente.id_telegram}</span>
                        <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">Copiar</button>
                     </p>
-                    <p><strong>Termina el:</strong> ${fechaFin.toLocaleString('es-ES')}</p>
+                    <p><strong>Inició el:</strong> ${fechaInicio.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                    <p><strong>Termina el:</strong> ${fechaFin.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                     ${tiempoHTML}
                 `;
                 listaClientesDiv.appendChild(clienteCard);
