@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="theme-color" content="#bb86fc"/>
+    <meta name="theme-color" content="#00ff41"/>
     <link rel="manifest" href="manifest.json">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,13 +12,37 @@
     <meta name="apple-mobile-web-app-title" content="Clientes XD">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <title>CLIENTES XDATA DOX</title>
     <style>
-        /* --- ESTILOS (CSS) --- */
+        /* --- NUEVO TEMA "HACKER" --- */
+
+        /* Variables de color para fácil modificación */
+        :root {
+            --primary-glow: #00ff41; /* Verde Neón */
+            --secondary-glow: #00e5ff; /* Cian Neón */
+            --danger-glow: #ff073a; /* Rojo Neón */
+            --background: #0a0a0a;
+            --surface: rgba(10, 25, 20, 0.3);
+            --border-color: rgba(0, 255, 65, 0.2);
+        }
+
+        /* Keyframes para la animación del cursor */
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #121212;
-            color: #e0e0e0;
+            font-family: 'Roboto Mono', monospace; /* Fuente de terminal */
+            background-color: var(--background);
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--primary-glow);
             margin: 0;
             padding: 20px;
             display: flex;
@@ -28,175 +52,174 @@
             max-width: 600px;
             width: 100%;
         }
-        h1, h2 {
+        h1 {
             text-align: center;
-            color: #bb86fc;
-            border-bottom: 2px solid #bb86fc;
-            padding-bottom: 10px;
+            color: var(--primary-glow);
+            text-shadow: 0 0 8px var(--primary-glow);
+            font-size: 2.5em;
+            letter-spacing: 4px;
+            text-transform: uppercase;
         }
-        .form-container {
-            background-color: #1e1e1e;
+        /* Cursor parpadeante en el título principal */
+        h1::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+        }
+        h2 {
+            text-align: left;
+            color: var(--secondary-glow);
+            text-shadow: 0 0 5px var(--secondary-glow);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .form-container, .cliente-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 15px var(--border-color);
+            backdrop-filter: blur(5px);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
         input[type="text"], input[type="number"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin-bottom: 10px;
-            border-radius: 4px;
-            border: 1px solid #333;
-            background-color: #2c2c2c;
-            color: #e0e0e0;
+            border-radius: 2px;
+            border: 1px solid var(--primary-glow);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--primary-glow);
+            font-family: 'Roboto Mono', monospace;
             font-size: 16px;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--primary-glow);
         }
         button {
             width: 100%;
             padding: 12px;
-            border: none;
-            border-radius: 4px;
-            background-color: #03dac6;
-            color: #121212;
+            border-radius: 2px;
+            background-color: transparent;
+            color: var(--primary-glow);
+            border: 1px solid var(--primary-glow);
             font-size: 16px;
+            font-family: 'Roboto Mono', monospace;
+            text-transform: uppercase;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
         button:hover {
-            background-color: #018786;
+            background-color: var(--primary-glow);
+            color: var(--background);
         }
         .cliente-card {
-            background-color: #1e1e1e;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 5px solid #bb86fc;
-            position: relative;
+            border-left: 4px solid var(--primary-glow);
+            transition: box-shadow 0.3s, transform 0.3s;
         }
-        /* NUEVO ESTILO PARA LAS TARJETAS DE CLIENTES VENCIDOS */
+        .cliente-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px var(--border-color);
+        }
         .cliente-card.vencido {
-            border-left-color: #cf6679; /* Color rojo */
+            border-left-color: var(--danger-glow);
         }
-        .cliente-card p {
-            margin: 8px 0;
-        }
-        .cliente-card strong {
-            color: #03dac6;
-        }
-        .tiempo-restante {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #28a745; /* Verde */
-            margin-top: 10px;
-        }
-        .tiempo-expirado {
-            color: #dc3545; /* Rojo */
-        }
+        .cliente-card p { margin: 8px 0; }
+        .cliente-card strong { color: var(--secondary-glow); text-transform: uppercase;}
+        .tiempo-restante { font-size: 1.2em; font-weight: bold; color: white; text-shadow: 0 0 5px var(--primary-glow);}
+        .tiempo-expirado { color: var(--danger-glow); text-shadow: 0 0 5px var(--danger-glow); }
+
         .btn-eliminar {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #cf6679;
-            color: #121212;
-            border: none;
+            top: 10px; right: 10px;
+            background-color: transparent;
+            color: var(--danger-glow);
+            border: 1px solid var(--danger-glow);
+            width: 30px; height: 30px;
+            font-size: 16px;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s, transform 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            transition: background-color 0.2s, color 0.2s, transform 0.2s;
         }
         .btn-eliminar:hover {
-            background-color: #e68e9c;
-            transform: scale(1.1);
+            background-color: var(--danger-glow);
+            color: var(--background);
+            transform: scale(1.1) rotate(90deg);
         }
-        .id-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .id-container { display: flex; justify-content: space-between; align-items: center; }
         .btn-copiar {
-            background-color: #333;
-            color: #e0e0e0;
-            border: 1px solid #555;
-            border-radius: 4px;
-            padding: 3px 8px;
+            padding: 2px 6px;
             font-size: 12px;
-            cursor: pointer;
+            border-color: var(--secondary-glow);
+            color: var(--secondary-glow);
+            width: auto;
         }
         .btn-copiar:hover {
-            background-color: #555;
+            background-color: var(--secondary-glow);
+            color: var(--background);
         }
-        .no-clientes { /* Estilo para mensajes de "No hay clientes" */
-            text-align: center;
-            color: #777;
-            font-style: italic;
-            padding: 20px 0;
+        .no-clientes {
+            text-align: center; color: rgba(255,255,255,0.4);
+            font-style: italic; padding: 20px 0;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>CLIENTES XDATA DOX</h1>
+        <h1>XDATA DOX</h1>
 
         <div class="form-container">
-            <h2>Agregar Nuevo Cliente</h2>
+            <h2>> new_client_entry</h2>
             <form id="form-agregar-cliente">
-                <input type="text" id="nombre-cliente" placeholder="Nombre del cliente" required>
-                <input type="text" id="id-telegram" placeholder="ID de Telegram del cliente" required>
-                <input type="number" id="duracion-dias" placeholder="Duración de la membresía (en días)" required min="1">
-                <button type="submit">Agregar Cliente</button>
+                <input type="text" id="nombre-cliente" placeholder="client_name" required>
+                <input type="text" id="id-telegram" placeholder="telegram_id" required>
+                <input type="number" id="duracion-dias" placeholder="membership_duration (days)" required min="1">
+                <button type="submit">Execute</button>
             </form>
         </div>
 
         <div>
-            <h2>Lista de Clientes Activos</h2>
+            <h2>> active_connections</h2>
             <div id="lista-clientes-activos"></div>
         </div>
 
         <div>
-            <h2>Clientes Vencidos</h2>
+            <h2>> terminated_connections</h2>
             <div id="lista-clientes-vencidos"></div>
         </div>
     </div>
 
     <script>
-        // Referencias a los elementos del HTML
+        // La lógica de JavaScript no necesita cambios.
+        // Solo hemos modificado el CSS y un poco de HTML estático.
         const form = document.getElementById('form-agregar-cliente');
         const inputNombre = document.getElementById('nombre-cliente');
         const inputTelegram = document.getElementById('id-telegram');
         const inputDuracion = document.getElementById('duracion-dias');
-        const listaActivosDiv = document.getElementById('lista-clientes-activos'); // Actualizado
-        const listaVencidosDiv = document.getElementById('lista-clientes-vencidos'); // Nuevo
+        const listaActivosDiv = document.getElementById('lista-clientes-activos');
+        const listaVencidosDiv = document.getElementById('lista-clientes-vencidos');
 
-        function cargarClientes() {
+        function cargarClientes() { /* ... sin cambios ... */
             const clientesJSON = localStorage.getItem('clientes');
             return clientesJSON ? JSON.parse(clientesJSON) : [];
         }
 
-        function guardarClientes(clientes) {
+        function guardarClientes(clientes) { /* ... sin cambios ... */
             localStorage.setItem('clientes', JSON.stringify(clientes));
         }
         
-        // --- FUNCIÓN DE RENDERIZADO (MODIFICADA COMPLETAMENTE) ---
-        function renderizarClientes() {
+        function renderizarClientes() { /* ... sin cambios ... */
             const todosLosClientes = cargarClientes();
             const ahora = new Date();
-
-            // Limpiamos ambas listas
             listaActivosDiv.innerHTML = ''; 
             listaVencidosDiv.innerHTML = '';
-
-            // Creamos dos arrays para separar a los clientes
             const clientesActivos = [];
             const clientesVencidos = [];
-
             todosLosClientes.forEach(cliente => {
                 if (new Date(cliente.fecha_fin) < ahora) {
                     clientesVencidos.push(cliente);
@@ -204,25 +227,17 @@
                     clientesActivos.push(cliente);
                 }
             });
-
-            // Ordenamos los clientes activos (del que vence antes al que vence después)
             clientesActivos.sort((a, b) => new Date(a.fecha_fin) - new Date(b.fecha_fin));
-            
-            // Ordenamos los clientes vencidos (del más reciente al más antiguo)
             clientesVencidos.sort((a, b) => new Date(b.fecha_fin) - new Date(a.fecha_fin));
-
-            // --- Renderizar Clientes Activos ---
             if (clientesActivos.length === 0) {
-                listaActivosDiv.innerHTML = '<p class="no-clientes">No hay clientes activos.</p>';
+                listaActivosDiv.innerHTML = '<p class="no-clientes">[No active connections found]</p>';
             } else {
                 clientesActivos.forEach(cliente => {
                     listaActivosDiv.appendChild(crearTarjetaCliente(cliente, false));
                 });
             }
-
-            // --- Renderizar Clientes Vencidos ---
             if (clientesVencidos.length === 0) {
-                listaVencidosDiv.innerHTML = '<p class="no-clientes">No hay clientes vencidos.</p>';
+                listaVencidosDiv.innerHTML = '<p class="no-clientes">[No terminated connections found]</p>';
             } else {
                 clientesVencidos.forEach(cliente => {
                     listaVencidosDiv.appendChild(crearTarjetaCliente(cliente, true));
@@ -230,117 +245,100 @@
             }
         }
 
-        // --- NUEVA FUNCIÓN PARA CREAR TARJETAS (PARA NO REPETIR CÓDIGO) ---
-        function crearTarjetaCliente(cliente, esVencido) {
+        function crearTarjetaCliente(cliente, esVencido) { /* ... sin cambios ... */
             const ahora = new Date();
             const fechaInicio = new Date(cliente.fecha_inicio);
             const fechaFin = new Date(cliente.fecha_fin);
-            
             let tiempoHTML = '';
             if (esVencido) {
-                tiempoHTML = `<p class="tiempo-restante tiempo-expirado">Membresía Expirada</p>`;
+                tiempoHTML = `<p class="tiempo-restante tiempo-expirado">[MEMBERSHIP TERMINATED]</p>`;
             } else {
                 const tiempoRestanteMs = fechaFin - ahora;
                 const dias = Math.floor(tiempoRestanteMs / (1000 * 60 * 60 * 24));
                 const horas = Math.floor((tiempoRestanteMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutos = Math.floor((tiempoRestanteMs % (1000 * 60 * 60)) / (1000 * 60));
                 const segundos = Math.floor((tiempoRestanteMs % (1000 * 60)) / 1000);
-                tiempoHTML = `<p class="tiempo-restante">${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
+                tiempoHTML = `<p class="tiempo-restante">Time_remaining: ${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
             }
-
             const clienteCard = document.createElement('div');
-            clienteCard.className = `cliente-card ${esVencido ? 'vencido' : ''}`; // Añade la clase 'vencido' si es necesario
-            
-            // Usamos la fecha de inicio como un ID único para eliminar
+            clienteCard.className = `cliente-card ${esVencido ? 'vencido' : ''}`;
             const clienteIdUnico = cliente.fecha_inicio; 
-            
             clienteCard.innerHTML = `
-                <button class="btn-eliminar" onclick="eliminarCliente('${clienteIdUnico}')">&times;</button>
-                <p><strong>Nombre:</strong> ${cliente.nombre}</p>
+                <button class="btn-eliminar" onclick="eliminarCliente('${clienteIdUnico}')">X</button>
+                <p><strong>user:</strong> ${cliente.nombre}</p>
                 <p class="id-container">
-                   <span><strong>ID Telegram:</strong> ${cliente.id_telegram}</span>
-                   <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">Copiar</button>
+                   <span><strong>tg_id:</strong> ${cliente.id_telegram}</span>
+                   <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">copy_id</button>
                 </p>
-                <p><strong>Inició el:</strong> ${fechaInicio.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                <p><strong>Termina el:</strong> ${fechaFin.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                <p><strong>conn_start:</strong> ${fechaInicio.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                <p><strong>conn_end:</strong> ${fechaFin.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 ${tiempoHTML}
             `;
             return clienteCard;
         }
 
-        function agregarCliente(event) {
+        function agregarCliente(event) { /* ... sin cambios ... */
             event.preventDefault();
             const nombre = inputNombre.value.trim();
             const idTelegram = inputTelegram.value.trim();
             const duracionDias = parseInt(inputDuracion.value, 10);
-            
             if (nombre && idTelegram && !isNaN(duracionDias) && duracionDias > 0) {
                 const clientes = cargarClientes();
                 const fechaInicio = new Date();
                 const fechaFin = new Date();
                 fechaFin.setDate(fechaInicio.getDate() + duracionDias);
-
                 const nuevoCliente = {
                     nombre: nombre,
                     id_telegram: idTelegram,
                     fecha_inicio: fechaInicio.toISOString(),
                     fecha_fin: fechaFin.toISOString()
                 };
-
                 clientes.push(nuevoCliente);
                 guardarClientes(clientes);
-                
                 inputNombre.value = '';
                 inputTelegram.value = '';
                 inputDuracion.value = '';
                 renderizarClientes();
             } else {
-                alert('Por favor, completa todos los campos correctamente.');
+                alert('ERROR: Invalid input data.');
             }
         }
 
-        // --- FUNCIÓN DE ELIMINAR (MODIFICADA PARA SER MÁS SEGURA) ---
-        function eliminarCliente(clienteIdUnico) {
-             if (confirm('¿Estás seguro de que quieres eliminar a este cliente?')) {
+        function eliminarCliente(clienteIdUnico) { /* ... sin cambios ... */
+             if (confirm('Confirm termination of this connection?')) {
                 let clientes = cargarClientes();
-                // Filtramos la lista para quedarnos con todos menos el que queremos eliminar
                 const clientesActualizados = clientes.filter(cliente => cliente.fecha_inicio !== clienteIdUnico);
-                
                 guardarClientes(clientesActualizados);
                 renderizarClientes();
             }
         }
 
-        function copiarID(id, boton) {
+        function copiarID(id, boton) { /* ... sin cambios ... */
             navigator.clipboard.writeText(id).then(() => {
                 const textoOriginal = boton.innerText;
-                boton.innerText = '¡Copiado!';
-                boton.style.backgroundColor = '#28a745';
+                boton.innerText = 'copied!';
+                boton.style.backgroundColor = 'var(--secondary-glow)';
+                boton.style.color = 'var(--background)';
                 setTimeout(() => {
                     boton.innerText = textoOriginal;
                     boton.style.backgroundColor = '';
+                    boton.style.color = '';
                 }, 2000);
             }).catch(err => {
-                console.error('Error al copiar el ID: ', err);
-                alert('No se pudo copiar el ID.');
+                console.error('Copy to clipboard failed: ', err);
+                alert('Access denied.');
             });
         }
         
-        // --- INICIO DE LA APLICACIÓN ---
         form.addEventListener('submit', agregarCliente);
         setInterval(renderizarClientes, 1000);
         document.addEventListener('DOMContentLoaded', renderizarClientes);
-
-        // --- CÓDIGO PARA REGISTRAR EL SERVICE WORKER ---
+        
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration);
-                    })
-                    .catch(error => {
-                        console.log('Error al registrar el Service Worker:', error);
-                    });
+                    .then(r => console.log('Service Worker: [ONLINE]'))
+                    .catch(e => console.log('Service Worker: [ERROR] ', e));
             });
         }
     </script>
