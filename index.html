@@ -89,6 +89,8 @@
         .tiempo-expirado {
             color: #dc3545; /* Rojo */
         }
+
+        /* --- ESTILO DEL BOTÓN DE ELIMINAR (MEJORADO) --- */
         .btn-eliminar {
             position: absolute;
             top: 10px;
@@ -101,10 +103,19 @@
             height: 30px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 16px;
-            line-height: 30px;
-            text-align: center;
+            font-size: 20px;
+            /* Usamos Flexbox para centrar perfectamente el contenido */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Añadimos una transición suave */
+            transition: background-color 0.2s, transform 0.2s;
         }
+        .btn-eliminar:hover {
+            background-color: #e68e9c; /* Un color un poco más claro al pasar el mouse */
+            transform: scale(1.1); /* Efecto de crecimiento sutil */
+        }
+        
         .id-container {
             display: flex;
             justify-content: space-between;
@@ -202,7 +213,7 @@
                 const clienteCard = document.createElement('div');
                 clienteCard.className = 'cliente-card';
                 clienteCard.innerHTML = `
-                    <button class="btn-eliminar" onclick="eliminarCliente(${index})">X</button>
+                    <button class="btn-eliminar" onclick="eliminarCliente(${index})">&times;</button>
                     <p><strong>Nombre:</strong> ${cliente.nombre}</p>
                     <p class="id-container">
                        <span><strong>ID Telegram:</strong> ${cliente.id_telegram}</span>
@@ -287,7 +298,7 @@
         setInterval(renderizarClientes, 1000);
         document.addEventListener('DOMContentLoaded', renderizarClientes);
 
-        // --- CÓDIGO PARA REGISTRAR EL SERVICE WORKER (CORREGIDO) ---
+        // --- CÓDIGO PARA REGISTRAR EL SERVICE WORKER ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
