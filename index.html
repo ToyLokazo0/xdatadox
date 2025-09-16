@@ -18,9 +18,7 @@
 
     <title>CLIENTES XDATA DOX</title>
     <style>
-        /* --- NUEVO TEMA "HACKER" --- */
-
-        /* Variables de color para fácil modificación */
+        /* --- TEMA "HACKER" --- */
         :root {
             --primary-glow: #00ff41; /* Verde Neón */
             --secondary-glow: #00e5ff; /* Cian Neón */
@@ -29,14 +27,11 @@
             --surface: rgba(10, 25, 20, 0.3);
             --border-color: rgba(0, 255, 65, 0.2);
         }
-
-        /* Keyframes para la animación del cursor */
         @keyframes blink {
             50% { opacity: 0; }
         }
-
         body {
-            font-family: 'Roboto Mono', monospace; /* Fuente de terminal */
+            font-family: 'Roboto Mono', monospace;
             background-color: var(--background);
             background-image: 
                 linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
@@ -48,123 +43,77 @@
             display: flex;
             justify-content: center;
         }
-        .container {
-            max-width: 600px;
-            width: 100%;
-        }
+        .container { max-width: 600px; width: 100%; }
         h1 {
-            text-align: center;
-            color: var(--primary-glow);
+            text-align: center; color: var(--primary-glow);
             text-shadow: 0 0 8px var(--primary-glow);
-            font-size: 2.5em;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            font-size: 2.5em; letter-spacing: 4px; text-transform: uppercase;
         }
-        /* Cursor parpadeante en el título principal */
-        h1::after {
-            content: '_';
-            animation: blink 1s step-end infinite;
-        }
+        h1::after { content: '_'; animation: blink 1s step-end infinite; }
         h2 {
-            text-align: left;
-            color: var(--secondary-glow);
+            text-align: left; color: var(--secondary-glow);
             text-shadow: 0 0 5px var(--secondary-glow);
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            padding-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;
         }
         .form-container, .cliente-card {
             background-color: var(--surface);
             border: 1px solid var(--border-color);
             box-shadow: 0 0 15px var(--border-color);
             backdrop-filter: blur(5px);
-            padding: 20px;
-            border-radius: 4px;
-            margin-bottom: 30px;
+            padding: 20px; border-radius: 4px; margin-bottom: 30px;
         }
         input[type="text"], input[type="number"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 2px;
-            border: 1px solid var(--primary-glow);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: var(--primary-glow);
-            font-family: 'Roboto Mono', monospace;
-            font-size: 16px;
+            width: calc(100% - 22px); padding: 10px; margin-bottom: 10px;
+            border-radius: 2px; border: 1px solid var(--primary-glow);
+            background-color: rgba(0, 0, 0, 0.5); color: var(--primary-glow);
+            font-family: 'Roboto Mono', monospace; font-size: 16px;
         }
         input[type="text"]:focus, input[type="number"]:focus {
-            outline: none;
-            box-shadow: 0 0 10px var(--primary-glow);
+            outline: none; box-shadow: 0 0 10px var(--primary-glow);
         }
         button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 2px;
-            background-color: transparent;
-            color: var(--primary-glow);
-            border: 1px solid var(--primary-glow);
-            font-size: 16px;
-            font-family: 'Roboto Mono', monospace;
-            text-transform: uppercase;
-            font-weight: bold;
-            cursor: pointer;
+            width: 100%; padding: 12px; border-radius: 2px;
+            background-color: transparent; color: var(--primary-glow);
+            border: 1px solid var(--primary-glow); font-size: 16px;
+            font-family: 'Roboto Mono', monospace; text-transform: uppercase;
+            font-weight: bold; cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
         }
-        button:hover {
-            background-color: var(--primary-glow);
-            color: var(--background);
-        }
+        button:hover { background-color: var(--primary-glow); color: var(--background); }
         .cliente-card {
             border-left: 4px solid var(--primary-glow);
             transition: box-shadow 0.3s, transform 0.3s;
         }
-        .cliente-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 25px var(--border-color);
-        }
-        .cliente-card.vencido {
-            border-left-color: var(--danger-glow);
-        }
+        .cliente-card:hover { transform: translateY(-5px); box-shadow: 0 0 25px var(--border-color); }
+        .cliente-card.vencido { border-left-color: var(--danger-glow); }
         .cliente-card p { margin: 8px 0; }
-        .cliente-card strong { color: var(--secondary-glow); text-transform: uppercase;}
-        .tiempo-restante { font-size: 1.2em; font-weight: bold; color: white; text-shadow: 0 0 5px var(--primary-glow);}
+        .cliente-card strong { color: var(--secondary-glow); text-transform: uppercase; }
+        .tiempo-restante { font-size: 1.2em; font-weight: bold; color: white; text-shadow: 0 0 5px var(--primary-glow); }
         .tiempo-expirado { color: var(--danger-glow); text-shadow: 0 0 5px var(--danger-glow); }
 
         .btn-eliminar {
-            position: absolute;
-            top: 10px; right: 10px;
-            background-color: transparent;
-            color: var(--danger-glow);
-            border: 1px solid var(--danger-glow);
-            width: 30px; height: 30px;
-            font-size: 16px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            position: absolute; top: 10px; right: 10px;
+            background-color: transparent; color: var(--danger-glow);
+            border: 1px solid var(--danger-glow); width: 30px; height: 30px;
+            font-size: 16px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
             transition: background-color 0.2s, color 0.2s, transform 0.2s;
         }
         .btn-eliminar:hover {
-            background-color: var(--danger-glow);
-            color: var(--background);
+            background-color: var(--danger-glow); color: var(--background);
             transform: scale(1.1) rotate(90deg);
         }
         .id-container { display: flex; justify-content: space-between; align-items: center; }
         .btn-copiar {
-            padding: 2px 6px;
-            font-size: 12px;
-            border-color: var(--secondary-glow);
-            color: var(--secondary-glow);
+            padding: 2px 6px; font-size: 12px;
+            border-color: var(--secondary-glow); color: var(--secondary-glow);
             width: auto;
         }
-        .btn-copiar:hover {
-            background-color: var(--secondary-glow);
-            color: var(--background);
-        }
+        .btn-copiar:hover { background-color: var(--secondary-glow); color: var(--background); }
         .no-clientes {
             text-align: center; color: rgba(255,255,255,0.4);
-            font-style: italic; padding: 20px 0;
-            text-transform: uppercase;
+            font-style: italic; padding: 20px 0; text-transform: uppercase;
         }
     </style>
 </head>
@@ -174,29 +123,27 @@
         <h1>XDATA DOX</h1>
 
         <div class="form-container">
-            <h2>> new_client_entry</h2>
+            <h2>> Nuevo Cliente</h2>
             <form id="form-agregar-cliente">
-                <input type="text" id="nombre-cliente" placeholder="client_name" required>
-                <input type="text" id="id-telegram" placeholder="telegram_id" required>
-                <input type="number" id="duracion-dias" placeholder="membership_duration (days)" required min="1">
-                <button type="submit">Execute</button>
+                <input type="text" id="nombre-cliente" placeholder="nombre_cliente" required>
+                <input type="text" id="id-telegram" placeholder="id_telegram" required>
+                <input type="number" id="duracion-dias" placeholder="duracion_membresia (dias)" required min="1">
+                <button type="submit">Ejecutar</button>
             </form>
         </div>
 
         <div>
-            <h2>> active_connections</h2>
+            <h2>> Conexiones Activas</h2>
             <div id="lista-clientes-activos"></div>
         </div>
 
         <div>
-            <h2>> terminated_connections</h2>
+            <h2>> Conexiones Terminadas</h2>
             <div id="lista-clientes-vencidos"></div>
         </div>
     </div>
 
     <script>
-        // La lógica de JavaScript no necesita cambios.
-        // Solo hemos modificado el CSS y un poco de HTML estático.
         const form = document.getElementById('form-agregar-cliente');
         const inputNombre = document.getElementById('nombre-cliente');
         const inputTelegram = document.getElementById('id-telegram');
@@ -204,16 +151,16 @@
         const listaActivosDiv = document.getElementById('lista-clientes-activos');
         const listaVencidosDiv = document.getElementById('lista-clientes-vencidos');
 
-        function cargarClientes() { /* ... sin cambios ... */
+        function cargarClientes() {
             const clientesJSON = localStorage.getItem('clientes');
             return clientesJSON ? JSON.parse(clientesJSON) : [];
         }
 
-        function guardarClientes(clientes) { /* ... sin cambios ... */
+        function guardarClientes(clientes) {
             localStorage.setItem('clientes', JSON.stringify(clientes));
         }
         
-        function renderizarClientes() { /* ... sin cambios ... */
+        function renderizarClientes() {
             const todosLosClientes = cargarClientes();
             const ahora = new Date();
             listaActivosDiv.innerHTML = ''; 
@@ -230,14 +177,14 @@
             clientesActivos.sort((a, b) => new Date(a.fecha_fin) - new Date(b.fecha_fin));
             clientesVencidos.sort((a, b) => new Date(b.fecha_fin) - new Date(a.fecha_fin));
             if (clientesActivos.length === 0) {
-                listaActivosDiv.innerHTML = '<p class="no-clientes">[No active connections found]</p>';
+                listaActivosDiv.innerHTML = '<p class="no-clientes">[Sin conexiones activas]</p>';
             } else {
                 clientesActivos.forEach(cliente => {
                     listaActivosDiv.appendChild(crearTarjetaCliente(cliente, false));
                 });
             }
             if (clientesVencidos.length === 0) {
-                listaVencidosDiv.innerHTML = '<p class="no-clientes">[No terminated connections found]</p>';
+                listaVencidosDiv.innerHTML = '<p class="no-clientes">[Sin conexiones terminadas]</p>';
             } else {
                 clientesVencidos.forEach(cliente => {
                     listaVencidosDiv.appendChild(crearTarjetaCliente(cliente, true));
@@ -245,39 +192,39 @@
             }
         }
 
-        function crearTarjetaCliente(cliente, esVencido) { /* ... sin cambios ... */
+        function crearTarjetaCliente(cliente, esVencido) {
             const ahora = new Date();
             const fechaInicio = new Date(cliente.fecha_inicio);
             const fechaFin = new Date(cliente.fecha_fin);
             let tiempoHTML = '';
             if (esVencido) {
-                tiempoHTML = `<p class="tiempo-restante tiempo-expirado">[MEMBERSHIP TERMINATED]</p>`;
+                tiempoHTML = `<p class="tiempo-restante tiempo-expirado">[MEMBRESÍA TERMINADA]</p>`;
             } else {
                 const tiempoRestanteMs = fechaFin - ahora;
                 const dias = Math.floor(tiempoRestanteMs / (1000 * 60 * 60 * 24));
                 const horas = Math.floor((tiempoRestanteMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutos = Math.floor((tiempoRestanteMs % (1000 * 60 * 60)) / (1000 * 60));
                 const segundos = Math.floor((tiempoRestanteMs % (1000 * 60)) / 1000);
-                tiempoHTML = `<p class="tiempo-restante">Time_remaining: ${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
+                tiempoHTML = `<p class="tiempo-restante">Tiempo_Restante: ${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
             }
             const clienteCard = document.createElement('div');
             clienteCard.className = `cliente-card ${esVencido ? 'vencido' : ''}`;
             const clienteIdUnico = cliente.fecha_inicio; 
             clienteCard.innerHTML = `
                 <button class="btn-eliminar" onclick="eliminarCliente('${clienteIdUnico}')">X</button>
-                <p><strong>user:</strong> ${cliente.nombre}</p>
+                <p><strong>Usuario:</strong> ${cliente.nombre}</p>
                 <p class="id-container">
-                   <span><strong>tg_id:</strong> ${cliente.id_telegram}</span>
-                   <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">copy_id</button>
+                   <span><strong>ID_Telegram:</strong> ${cliente.id_telegram}</span>
+                   <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">Copiar_ID</button>
                 </p>
-                <p><strong>conn_start:</strong> ${fechaInicio.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                <p><strong>conn_end:</strong> ${fechaFin.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                <p><strong>Inicio_Conexión:</strong> ${fechaInicio.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                <p><strong>Fin_Conexión:</strong> ${fechaFin.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 ${tiempoHTML}
             `;
             return clienteCard;
         }
 
-        function agregarCliente(event) { /* ... sin cambios ... */
+        function agregarCliente(event) {
             event.preventDefault();
             const nombre = inputNombre.value.trim();
             const idTelegram = inputTelegram.value.trim();
@@ -300,12 +247,12 @@
                 inputDuracion.value = '';
                 renderizarClientes();
             } else {
-                alert('ERROR: Invalid input data.');
+                alert('ERROR: Datos de entrada inválidos.');
             }
         }
 
-        function eliminarCliente(clienteIdUnico) { /* ... sin cambios ... */
-             if (confirm('Confirm termination of this connection?')) {
+        function eliminarCliente(clienteIdUnico) {
+             if (confirm('¿Confirmar la terminación de esta conexión?')) {
                 let clientes = cargarClientes();
                 const clientesActualizados = clientes.filter(cliente => cliente.fecha_inicio !== clienteIdUnico);
                 guardarClientes(clientesActualizados);
@@ -313,10 +260,10 @@
             }
         }
 
-        function copiarID(id, boton) { /* ... sin cambios ... */
+        function copiarID(id, boton) {
             navigator.clipboard.writeText(id).then(() => {
                 const textoOriginal = boton.innerText;
-                boton.innerText = 'copied!';
+                boton.innerText = '¡Copiado!';
                 boton.style.backgroundColor = 'var(--secondary-glow)';
                 boton.style.color = 'var(--background)';
                 setTimeout(() => {
@@ -325,8 +272,8 @@
                     boton.style.color = '';
                 }, 2000);
             }).catch(err => {
-                console.error('Copy to clipboard failed: ', err);
-                alert('Access denied.');
+                console.error('Fallo al copiar al portapapeles: ', err);
+                alert('Acceso denegado.');
             });
         }
         
@@ -337,7 +284,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(r => console.log('Service Worker: [ONLINE]'))
+                    .then(r => console.log('Service Worker: [EN LÍNEA]'))
                     .catch(e => console.log('Service Worker: [ERROR] ', e));
             });
         }
