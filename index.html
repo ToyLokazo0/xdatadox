@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIENTES XDATA DOX</title>
+    <style>
+        /* --- ESTILOS (CSS) --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #bb86fc;
+            border-bottom: 2px solid #bb86fc;
+            padding-bottom: 10px;
+        }
+        .form-container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        input[type="text"], input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #2c2c2c;
+            color: #e0e0e0;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: #03dac6;
+            color: #121212;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #018786;
+        }
+        .cliente-card {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #bb86fc;
+            position: relative;
+        }
+        .cliente-card p {
+            margin: 8px 0;
+        }
+        .cliente-card strong {
+            color: #03dac6;
+        }
+        .tiempo-restante {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #28a745; /* Verde */
+            margin-top: 10px;
+        }
+        .tiempo-expirado {
+            color: #dc3545; /* Rojo */
+        }
+        .btn-eliminar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #cf6679;
+            color: #121212;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 30px;
+            text-align: center;
+        }
+        /* --- AJUSTES AL BOTÓN DE COPIAR Y SU CONTENEDOR --- */
+        .id-container {
+            display: flex; /* Activa el modo flexible */
+            justify-content: space-between; /* Empuja los elementos a los extremos */
+            align-items: center; /* Los alinea verticalmente */
+        }
+        .btn-copiar {
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 3px 8px; /* Un poco más pequeño */
+            font-size: 12px;
+            cursor: pointer;
+            /* Ya no necesitamos margen ni alineación vertical aquí */
+        }
+        .btn-copiar:hover {
+            background-color: #555;
+        }
+        #lista-clientes p.no-clientes {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CLIENTES XDATA DOX</h1>
+
+        <div class="form-container">
+            <h2>Agregar Nuevo Cliente</h2>
+            <form id="form-agregar-cliente">
+                <input type="text" id="nombre-cliente" placeholder="Nombre del cliente" required>
+                <input type="text" id="id-telegram" placeholder="ID de Telegram del cliente" required>
+                <input type="number" id="duracion-dias" placeholder="Duración de la membresía (en días)" required min="1">
+                <button type="submit">Agregar Cliente</button>
+            </form>
+        </div>
+
+        <div>
+            <h2>Lista de Clientes</h2>
+            <div id="lista-clientes">
+                </div>
+        </div>
+    </div>
+
+    <script>
+    // Referencias a los elementos del HTML
+    const form = document.getElementById('form-agregar-cliente');
+    const inputNombre = document.getElementById('nombre-cliente');
+    const inputTelegram = document.getElementById('id-telegram');
+    const inputDuracion = document.getElementById('duracion-dias');
+    const listaClientesDiv = document.getElementById('lista-clientes');
+
+    function cargarClientes() {
+        const clientesJSON = localStorage.getItem('clientes');
+        return clientesJSON ? JSON.parse(clientesJSON) : [];
+    }
+
+    function guardarClientes(clientes) {
+        localStorage.setItem('clientes', JSON.stringify(clientes));
+    }
+    
+    function renderizarClientes() {
+        const clientes = cargarClientes();
+        const ahora = new Date();
+        listaClientesDiv.innerHTML = ''; 
+
+        clientes.sort((a, b) => {
+            const tiempoRestanteA = new Date(a.fecha_fin) - ahora;
+            const tiempoRestanteB = new Date(b.fecha_fin) - ahora;
+            return tiempoRestanteA - tiempoRestanteB;
+        });
+
+        if (clientes.length === 0) {
+            listaClientesDiv.innerHTML = '<p class="no-clientes">No hay clientes registrados.</p>';
+            return;
+        }
+
+        clientes.forEach((cliente, index) => {
+            const fechaFin = new Date(cliente.fecha_fin);
+            const tiempoRestanteMs = fechaFin - ahora;
+
+            let tiempoHTML = '';
+            if (tiempoRestanteMs > 0) {
+                const dias = Math.floor(tiempoRestanteMs / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((tiempoRestanteMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutos = Math.floor((tiempoRestanteMs % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((tiempoRestanteMs % (1000 * 60)) / 1000);
+                tiempoHTML = `<p class="tiempo-restante">${dias}d ${horas}h ${minutos}m ${segundos}s</p>`;
+            } else {
+                tiempoHTML = `<p class="tiempo-restante tiempo-expirado">Membresía Expirada</p>`;
+            }
+
+            const clienteCard = document.createElement('div');
+            clienteCard.className = 'cliente-card';
+            // --- AQUÍ APLICAMOS LA NUEVA CLASE AL PÁRRAFO ---
+            clienteCard.innerHTML = `
+                <button class="btn-eliminar" onclick="eliminarCliente(${index})">X</button>
+                <p><strong>Nombre:</strong> ${cliente.nombre}</p>
+                <p class="id-container">
+                   <span><strong>ID Telegram:</strong> ${cliente.id_telegram}</span>
+                   <button class="btn-copiar" onclick="copiarID('${cliente.id_telegram}', this)">Copiar</button>
+                </p>
+                <p><strong>Termina el:</strong> ${fechaFin.toLocaleString('es-ES')}</p>
+                ${tiempoHTML}
+            `;
+            listaClientesDiv.appendChild(clienteCard);
+        });
+    }
+
+    function agregarCliente(event) {
+        event.preventDefault();
+        const nombre = inputNombre.value.trim();
+        const idTelegram = inputTelegram.value.trim();
+        const duracionDias = parseInt(inputDuracion.value, 10);
+        
+        if (nombre && idTelegram && !isNaN(duracionDias) && duracionDias > 0) {
+            const clientes = cargarClientes();
+            const fechaInicio = new Date();
+            const fechaFin = new Date();
+            fechaFin.setDate(fechaInicio.getDate() + duracionDias);
+
+            const nuevoCliente = {
+                nombre: nombre,
+                id_telegram: idTelegram,
+                fecha_inicio: fechaInicio.toISOString(),
+                fecha_fin: fechaFin.toISOString()
+            };
+
+            clientes.push(nuevoCliente);
+            guardarClientes(clientes);
+            
+            inputNombre.value = '';
+            inputTelegram.value = '';
+            inputDuracion.value = '';
+            renderizarClientes();
+        } else {
+            alert('Por favor, completa todos los campos correctamente.');
+        }
+    }
+
+    function eliminarCliente(originalIndex) {
+         if (confirm('¿Estás seguro de que quieres eliminar a este cliente?')) {
+            const clientes = cargarClientes();
+            const ahora = new Date();
+            
+            clientes.sort((a, b) => (new Date(a.fecha_fin) - ahora) - (new Date(b.fecha_fin) - ahora));
+            
+            const clienteAEliminar = clientes[originalIndex];
+            
+            const clientesOriginales = cargarClientes();
+            const indiceEnOriginal = clientesOriginales.findIndex(c => c.id_telegram === clienteAEliminar.id_telegram && c.fecha_fin === clienteAEliminar.fecha_fin);
+
+            if (indiceEnOriginal !== -1) {
+                clientesOriginales.splice(indiceEnOriginal, 1);
+                guardarClientes(clientesOriginales);
+            }
+            
+            renderizarClientes();
+        }
+    }
+
+    function copiarID(id, boton) {
+        navigator.clipboard.writeText(id).then(() => {
+            const textoOriginal = boton.innerText;
+            boton.innerText = '¡Copiado!';
+            boton.style.backgroundColor = '#28a745';
+            setTimeout(() => {
+                boton.innerText = textoOriginal;
+                boton.style.backgroundColor = '';
+            }, 2000);
+        }).catch(err => {
+            console.error('Error al copiar el ID: ', err);
+            alert('No se pudo copiar el ID.');
+        });
+    }
+    
+    // --- INICIO DE LA APLICACIÓN ---
+    form.addEventListener('submit', agregarCliente);
+    setInterval(renderizarClientes, 1000);
+    document.addEventListener('DOMContentLoaded', renderizarClientes);
+
+    </script>
+</body>
+</html>
